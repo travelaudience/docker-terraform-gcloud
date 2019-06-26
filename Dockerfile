@@ -21,12 +21,13 @@ RUN apk --no-cache add \
     rm google-cloud-sdk-${CLOUD_SDK_VERSION}-linux-x86_64.tar.gz && \
     ln -s /lib /lib64
 
+
 RUN gcloud config set core/disable_usage_reporting true && \
     gcloud config set component_manager/disable_update_check true && \
     gcloud config set metrics/environment github_docker_image
 VOLUME ["/root/.config"]
 
-# Terraform
+# Terraform and xterrafile/yamllint to handle terraform modules
 
 ENV TF_DEV=true
 ENV TF_RELEASE=true
@@ -34,4 +35,8 @@ ENV TF_RELEASE=true
 WORKDIR $GOPATH/src/github.com/hashicorp/terraform
 RUN git clone https://github.com/hashicorp/terraform.git ./ && \
     git checkout v${TERRAFORM_VERSION} && \
-    /bin/bash scripts/build.sh
+    /bin/bash scripts/build.sh && \
+    curl -L https://github.com/devopsmakers/xterrafile/releases/download/v0.5.1/xterrafile_0.5.1_Linux_x86_64.tar.gz | tar xz -C /usr/local/bin && \
+    apk add --no-cache py-pip && pip install --user yamllint && apk del py-pip 
+
+ENV PATH="/root/.local/bin:$PATH"
