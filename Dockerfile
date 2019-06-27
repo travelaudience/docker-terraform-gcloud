@@ -37,6 +37,4 @@ RUN git clone https://github.com/hashicorp/terraform.git ./ && \
     git checkout v${TERRAFORM_VERSION} && \
     /bin/bash scripts/build.sh && \
     curl -L https://github.com/devopsmakers/xterrafile/releases/download/v0.5.1/xterrafile_0.5.1_Linux_x86_64.tar.gz | tar xz -C /usr/local/bin && \
-    apk add --no-cache py-pip && pip install --user yamllint && apk del py-pip 
-
-ENV PATH="/root/.local/bin:$PATH"
+    apk add --no-cache py-pip && pip install yamllint && apk del py-pip
